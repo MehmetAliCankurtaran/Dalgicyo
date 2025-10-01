@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        Dalgicyo
+    </title>
+    <meta name="title" content="Dalış Alanları">
+    <meta name="description" content="Son yüzyılın ilk dalgıç simülasyon oyununa hoşgeldiniz.">
+    <meta name="keywords" content="dalgic, oyun, simulator, dalgic sims, dalgic oyunlari">
+
+    <style>
+        body {
+            text-align: center;
+            /* Başlık, paragraflar ve inline öğeler ortalanır */
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+            /* isteğe bağlı */
+        }
+
+        form {
+            display: inline-block;
+            /* form ekranın ortasında */
+            text-align: left;
+            /* form içi öğeler sola hizalı */
+            margin: 0 auto;
+        }
+
+        #yorumlar div {
+            text-align: left;
+            /* yorum kutuları içindeki yazı sola hizalanır */
+        }
+
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+            display: inline-block;
+        }
+
+        .login-box {
+            position: fixed;
+            /* ekran kaydırılsa bile sabit kalır */
+            top: 4 0px;
+            /* üstten 20px boşluk */
+            left: 1130px;
+            /* soldan 20px boşluk */
+            background-color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+            /* diğer içeriklerin üstünde */
+        }
+
+        .login-box .input-group {
+            display: flex;
+            /* label ve input yan yana */
+            align-items: center;
+            /* dikey ortalama */
+            margin-bottom: 10px;
+            /* her satır arasında boşluk */
+        }
+
+        .login-box .input-group label {
+            width: 100px;
+            /* tüm label’lar aynı genişlikte */
+            text-align: right;
+            /* label metnini sağa yasla */
+            margin-right: 10px;
+            /* input ile arada boşluk */
+        }
+
+        .login-box .input-group input[type="text"],
+        .login-box .input-group input[type="password"] {
+            flex: 1;
+            /* input kalan alanı kaplar */
+            padding: 5px 8px;
+        }
+
+
+
+
+
+
+        .game-gallery {
+            width: 100%;
+            overflow-x: auto;
+            white-space: nowrap;
+            padding: 20px 0;
+            margin: 20px 0;
+        }
+
+        .game-gallery::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .game-gallery::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .game-gallery::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+
+        .game-gallery::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        .gallery-item {
+            display: inline-block;
+            width: 300px;
+            margin-right: 15px;
+            vertical-align: top;
+            white-space: normal;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item img:hover {
+            transform: scale(1.05);
+        }
+
+        .image-caption {
+            text-align: center;
+            margin-top: 8px;
+            font-size: 14px;
+            color: #666;
+        }
+
+
+
+        .fixed-top-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: #007bff;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .fixed-top-button.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .fixed-top-button:hover {
+            background-color: #45a049;
+        }
+
+
+
+
+
+        .fullscreen-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            cursor: pointer;
+        }
+
+        .fullscreen-image {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 8px;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+        }
+
+        .fullscreen-overlay.show {
+            display: flex;
+        }
+    </style>
+
+
+</head>
+
+
+
+
+
+
+<body>
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class="login-box">
+        <mark> <u>Giriş</u></mark><br><br>
+
+        <div class="input-group">
+            <label for="username">Kullanıcı Adı:</label>
+            <input type="text" id="username" name="id">
+        </div>
+
+        <div class="input-group">
+            <label for="password">Şifre:</label>
+            <input type="password" id="password" name="psw">
+        </div>
+
+        <div class="input-group">
+            <input type="checkbox" name="Rememberidpsw" id="remember">
+            <label for="remember">Bu cihazda hatırla</label>
+        </div>
+
+        <div class="input-group">
+            <input type="button" value="Giriş" name="LoginCheck">
+            <button type="button" name="pswChange">Şifremi Unuttum</button>
+        </div>
+    </div>
+    <br id="basadon">
+
+    <!-- Ekranın sol üst köşesindeki giriş kutusu -->
+
+
+
+
+
+
+    <div class="container">
+
+        <img src="Dalgicyo.png" width="150"
+            style="width:150px; height:150px; object-fit:cover; border-radius:50%; border:2px solid black;">
+        <h1>
+            Dalgicyo
+        </h1>
+
+
+        <h3>
+            Created By YoMehmet Company.
+        </h3>
+        <h4>
+            <mark><del>399₺ </del> &nbsp;&nbsp;yerine &nbsp;&nbsp;199₺</mark>
+        </h4>
+
+        <br>
+        Dalgicyo oyununa hoşgeldiniz.
+        <p style="color:rgb(32, 27, 57);">
+            Sahil şeritlerinde keşif yaparak eğlendiğiniz <b>macera</b> ve <b>simülatör</b> oyununa hoşgeldiniz.
+        </p>
+
+        <h3><u>Görseller</u></h3>
+        <div class="game-gallery">
+            <div class="gallery-item">
+                <img src="gameplay1.png" alt="Oyun Görseli 1" onclick="acTamEkran('gameplay1.png')">
+                <div class="image-caption">Sahil Keşfi</div>
+            </div>
+            <div class="gallery-item">
+                <img src="gameplay2.png" alt="Oyun Görseli 2" onclick="acTamEkran('gameplay2.png')">
+                <div class="image-caption">Metal Dedektörü</div>
+            </div>
+            <div class="gallery-item">
+                <img src="gameplay3.png" alt="Oyun Görseli 3" onclick="acTamEkran('gameplay3.png')">
+                <div class="image-caption">Hazine Avı</div>
+            </div>
+            <div class="gallery-item">
+                <img src="gameplay4.png" alt="Oyun Görseli 4" onclick="acTamEkran('gameplay4.png')">
+                <div class="image-caption">Envanter Yönetimi</div>
+            </div>
+            <div class="gallery-item">
+                <img src="gameplay5.png" alt="Oyun Görseli 5" onclick="acTamEkran('gameplay5.png')">
+                <div class="image-caption">Mağaza Sistemi</div>
+            </div>
+        </div>
+
+        <p>
+            Oyuna ilk önce
+        <div style="text-align: center;">
+            </p>
+            <ul style="list-style-position: inside; text-align: center; display: inline-block;">
+                <li><u>bir ev,</li>
+                <li> bir tablet,</li>
+                <li> bir araba ve </li>
+                <li>bir adet metal dedektör</u> ile başlarsınız.</li>
+            </ul>
+
+            <p>
+                <b>Amacınız,</b> sahil şeritlerinde keşif için <i>kiralanan alanları satın almak</i> ve değerli eşyalar
+                aramaktır.<br>
+                Elinizde bir adet metal dedektörle işe koyulursunuz. Daha sonra envanterinizi genişletip daha değerli
+                eşyalar<br> bulabilmek için <i>tablet üzerinden mağazayı</i> kullanabilirsiniz.
+
+            </p>
+            <p>
+                Aramalar esnasında bulduğunuz ürünleri çantanıza doldurabilirsiniz. <strong>Dikkat etmeniz gereken bir
+                    diğer
+                    husus</strong><br>
+                çantanızın <u>sınırlı alanı</u> olmasıdır ama endişe etmeyin çantanız dolduğunda yüzeye çıkıp
+                çantanızdaki
+                eşyaları<br>
+                arabanıza aktardıktan sonra kaldığınız yerden devam edebilirsiniz.
+            </p>
+            <p>
+                Kiraladığınız alanlarda <u>1 gün</u> boyunda <b>dalış </b>ve<b> keşif</b> yapabilirsiniz, <i>sürenizi
+                    doğru
+                    kullanın.</i>
+            </p>
+            <p>
+                İlk önce 100m<sup>2</sup> alanlarda aramayla başlarsınız. Daha sonra dilerseniz daha geniş alanlarda
+                arama
+                yapabilirsiniz.<br>
+                Keşfet<sup>sat</sup><sub>zengin ol</sub>
+            </p>
+            <table border="1"
+                style="margin: 20px auto; width: 70%; border-collapse: collapse; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                <thead>
+                    <tr style="background-color: #d0e0f0;">
+                        <th style="width: 30%; padding: 12px; text-align: left;">Bileşen</th>
+                        <th style="padding: 12px; text-align: left;">Minimum Sistem</th>
+                        <th style="padding: 12px; text-align: left;">Optimum sistem</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td>İşlemci</td>
+                        <td>Intel I3</td>
+                        <td>Intel I7</td>
+
+                    </tr>
+                    <tr>
+                        <td>Ram</td>
+                        <td>4GB</td>
+                        <td>16GB</td>
+                    </tr>
+                    <tr>
+                        <td>Disk</td>
+                        <td colspan="2">Minimum 15GB</td>
+                    </tr>
+
+                    <tr>
+                        <td>Ekran Kartı</td>
+                        <td>RTX 4GB</td>
+                        <td>RTX 8GB</td>
+                    </tr>
+                </tbody>
+
+
+            </table>
+            <form>
+                <p>
+                    Sürüm Seçiniz:
+                    <select name="version">
+                        <option value="4.3">4.3 - Güncel</option>
+                        <option value="4.0">4.0</option>
+                        <option value="3.6">3.6</option>
+
+                    </select>
+                </p>
+
+                <p>
+                    Yorumlar <br>
+                <p>
+                    <output
+                        style="display:inline-block; border:2px solid black; padding:8px; border-radius:4px;">Oyununuzu
+                        beğendim çok güzeldi.</output>
+                </p>
+                <p>
+                    <output style="display: inline-block;border: 2px solid black;padding:  8px;border-radius: 4px;">
+                        Oyun gerçekten harikaydı, bayıldım. Puanım 5.
+                    </output>
+                </p>
+                <div id="yorumlar" style="margin-top: 15px; "></div>
+
+                <input type="text" id="yorumInput" placeholder="Yorum girmek için tıklayınız.">
+                <button type="button" onclick="yorumEkle()">Gönder</button>
+                </p>
+
+                <p>
+                    Derecelendir <br> 1<input type="radio" name="puan"> &nbsp;2<input type="radio" name="puan">
+                    &nbsp;3<input type="radio" name="puan"> &nbsp; 4<input type="radio" name="puan"> &nbsp;5<input
+                        type="radio" name="puan">
+                </p>
+
+
+            </form>
+
+
+            <script>
+                function yorumEkle() {
+                    const input = document.getElementById("yorumInput");
+                    const yorumText = input.value.trim();
+
+                    if (yorumText !== "") {
+                        const wrapper = document.createElement("div")
+                        wrapper.style.marginBottom = "10px";
+                        const yorumKutusu = document.createElement("div");
+                        yorumKutusu.textContent = yorumText;
+                        yorumKutusu.style.border = "1px solid black";
+                        yorumKutusu.style.padding = "8px";
+                        yorumKutusu.style.borderRadius = "6px";
+                        yorumKutusu.style.display = "inline-block";
+                        yorumKutusu.style.wordBreak = "break-word";
+                        yorumKutusu.style.maxWidth = "300px";
+
+                        wrapper.appendChild(yorumKutusu);
+                        document.getElementById("yorumlar").appendChild(wrapper);
+                        input.value = "";
+                    }
+                }
+
+                // BAŞA DÖN BUTONU SCROLL KONTROLÜ - BU KODU EKLEYİN
+                window.addEventListener('scroll', function () {
+                    const basadonButton = document.querySelector('.fixed-top-button');
+                    if (window.scrollY > 300) {
+                        basadonButton.classList.add('show');
+                    } else {
+                        basadonButton.classList.remove('show');
+                    }
+                })
+
+                // Tam ekran görsel fonksiyonları
+                function acTamEkran(imageSrc) {
+                    const overlay = document.getElementById('fullscreenOverlay');
+                    const fullscreenImage = document.getElementById('fullscreenImage');
+
+                    fullscreenImage.src = imageSrc;
+                    overlay.classList.add('show');
+                    document.body.style.overflow = 'hidden'; // Sayfa kaydırmayı engelle
+                }
+
+                function kapatTamEkran() {
+                    const overlay = document.getElementById('fullscreenOverlay');
+                    overlay.classList.remove('show');
+                    document.body.style.overflow = 'auto'; // Sayfa kaydırmayı geri aç
+                }
+
+                // ESC tuşu ile kapatma
+                document.addEventListener('keydown', function (event) {
+                    if (event.key === 'Escape') {
+                        kapatTamEkran();
+                    }
+                });
+            </script>
+
+
+        </div>
+        <div class="fullscreen-overlay" id="fullscreenOverlay" onclick="kapatTamEkran()">
+            <img src="" class="fullscreen-image" id="fullscreenImage">
+        </div>
+        <a href="#basadon" class="fixed-top-button">Başa Dön</a>
+
+</body>
+
+</html>
